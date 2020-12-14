@@ -3,10 +3,10 @@ package reversi.player;
 import reversi.Coordinates;
 import reversi.GameBoard;
 import reversi.ReversiPlayer;
+import reversi.deciders.MiniMaxDecider;
 import reversi.raters.ComplexRater;
 import reversi.utils.IDecideMove;
 import reversi.utils.IRateBoard;
-import u9a2.MiniMaxDecider;
 
 public class MiniMaxPlayer implements ReversiPlayer {
     IDecideMove decider;
