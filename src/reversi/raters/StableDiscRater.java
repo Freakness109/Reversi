@@ -12,13 +12,13 @@ public class StableDiscRater implements IRateBoard {
     private int player;
     @Override
     public int rateBoard(GameBoard board) {
-        HashSet<Coordinates> seenCoords = new HashSet<>();
+        ArrayList<Coordinates> seenCoords = new ArrayList<>();
         Deque<Coordinates> toDoList = new ArrayDeque<>();
         int sum = 0;
-        toDoList.add(new Coordinates(0,0));
-        toDoList.add(new Coordinates(7,0));
-        toDoList.add(new Coordinates(0,7));
-        toDoList.add(new Coordinates(7,7));
+        toDoList.add(new Coordinates(1,1));
+        toDoList.add(new Coordinates(8,1));
+        toDoList.add(new Coordinates(1,8));
+        toDoList.add(new Coordinates(8,8));
         while (!toDoList.isEmpty()) {
             Coordinates coords = toDoList.pop();
             seenCoords.add(coords);

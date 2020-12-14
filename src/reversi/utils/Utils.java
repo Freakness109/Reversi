@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+    private Utils(){}
     // don't make throwaway objects to tax the GC less
     private static final List<Coordinates> allCoords;
 
@@ -37,28 +38,28 @@ public class Utils {
 
         ArrayList<Coordinates> ret = new ArrayList<>(8);
 
-        if (row > 0) {
+        if (row > 1) {
             ret.add(new Coordinates(row - 1, col));
         }
-        if (row < 7) {
+        if (row < 8) {
             ret.add(new Coordinates(row + 1, col));
         }
-        if (col > 0) {
+        if (col > 1) {
             ret.add(new Coordinates(row, col - 1));
         }
-        if (col < 7) {
+        if (col < 8) {
             ret.add(new Coordinates(row, col + 1));
         }
-        if (row > 0 && col > 0) {
+        if (row > 1 && col > 1) {
             ret.add(new Coordinates(row - 1, col - 1));
         }
-        if (row < 7 && col < 7) {
+        if (row < 8 && col < 8) {
             ret.add(new Coordinates(row + 1, col + 1));
         }
-        if (row > 0 && col < 7) {
+        if (row > 1 && col < 8) {
             ret.add(new Coordinates(row - 1, col + 1));
         }
-        if (row < 7 && col > 0) {
+        if (row < 8 && col > 1) {
             ret.add(new Coordinates(row + 1, col - 1));
         }
         return ret;
