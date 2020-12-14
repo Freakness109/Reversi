@@ -6,10 +6,7 @@ import reversi.OutOfBoundsException;
 import reversi.utils.IRateBoard;
 import reversi.utils.Utils;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class StableDiscRater implements IRateBoard {
     private int player;
@@ -28,6 +25,12 @@ public class StableDiscRater implements IRateBoard {
             try {
                 if (board.getOccupation(coords) == player) {
                     sum += 1;
+                    List<Coordinates> surrounding = Utils.getSurrounding(coords);
+                    for (Coordinates c : surrounding) {
+                        if (!seenCoords.contains(c)) {
+                            toDoList.add(c);
+                        }
+                    }
                 }
             } catch (OutOfBoundsException e) {
                 e.printStackTrace();
