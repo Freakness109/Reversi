@@ -24,21 +24,21 @@ public class ComplexRater implements IRateBoard {
         this.corners = new ArrayList<>(4);
         this.nextToCorners = new ArrayList<>(8);
 
-        corners.add(new Coordinates(0, 0));
-        nextToCorners.add(new Coordinates(1, 0));
-        nextToCorners.add(new Coordinates(0, 1));
+        corners.add(new Coordinates(1, 1));
+        nextToCorners.add(new Coordinates(2, 1));
+        nextToCorners.add(new Coordinates(1, 2));
 
-        corners.add(new Coordinates(7, 0));
-        nextToCorners.add(new Coordinates(6, 0));
+        corners.add(new Coordinates(8, 1));
         nextToCorners.add(new Coordinates(7, 1));
+        nextToCorners.add(new Coordinates(8, 2));
 
-        corners.add(new Coordinates(0, 7));
-        nextToCorners.add(new Coordinates(0, 6));
+        corners.add(new Coordinates(1, 8));
         nextToCorners.add(new Coordinates(1, 7));
+        nextToCorners.add(new Coordinates(2, 8));
 
-        corners.add(new Coordinates(7, 7));
-        nextToCorners.add(new Coordinates(7, 6));
-        nextToCorners.add(new Coordinates(6, 7));
+        corners.add(new Coordinates(8, 8));
+        nextToCorners.add(new Coordinates(8, 7));
+        nextToCorners.add(new Coordinates(7, 8));
 
         greedy = new TotalPieceRater();
         greedy.setPlayer(player);
