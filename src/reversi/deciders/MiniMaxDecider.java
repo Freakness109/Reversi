@@ -34,6 +34,7 @@ public class MiniMaxDecider implements IDecideMove {
         deadline = timeout + System.currentTimeMillis() - 20;
         Coordinates ret = null;
         int max = 0;
+        int lastmax = 0;
         try {
             List<Coordinates> moves = Utils.getPossibleMoves(board, player);
             if (moves.isEmpty())
@@ -55,6 +56,7 @@ public class MiniMaxDecider implements IDecideMove {
                 GameBoard b = board.clone();
                 b.makeMove(player, moves.get(0));
                 ret = bestMove;
+                lastmax = max;
                 int totalStones = board.countStones(1) + board.countStones(2);
                 if (totalStones + depth == 64) {
                     break;
@@ -63,7 +65,7 @@ public class MiniMaxDecider implements IDecideMove {
         } catch (TimeOutException ignored) {
             GameBoard nextMove = board.clone();
             nextMove.makeMove(this.player, ret);
-            System.out.printf("Depth of search : %d, Rating: %d%n", depth, max);
+            System.out.printf("Depth of search : %d, Rating: %d%n", depth, lastmax);
         }
 
         return ret;
