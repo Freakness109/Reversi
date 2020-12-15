@@ -17,6 +17,8 @@ import reversi.ReversiPlayer;
 public class AlphaBetaPlayer implements ReversiPlayer {
     private IDecideMove decider;
 
+    public AlphaBetaPlayer() {}
+
     @Override
     public void initialize(int player, long timeout) {
         IRateBoard rater = new ComplexRater();
@@ -36,4 +38,5 @@ public class AlphaBetaPlayer implements ReversiPlayer {
     public Coordinates nextMove(GameBoard gameBoard) {
         return decider.nextMove(new BitBoard(gameBoard));
     }
+    public static void main(String[] args) {}
 }

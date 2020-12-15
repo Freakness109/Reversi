@@ -11,6 +11,7 @@ import reversi.utils.IRateBoard;
 public class MiniMaxPlayer implements ReversiPlayer {
     IDecideMove decider;
 
+    public MiniMaxPlayer(){}
     @Override
     public void initialize(int i, long l) {
         decider = new MiniMaxDecider();

@@ -10,6 +10,8 @@ import reversi.utils.IRateBoard;
 
 public class StableDiscAlphaBeta implements ReversiPlayer {
     private IDecideMove decideMove;
+
+    public StableDiscAlphaBeta(){}
     @Override
     public void initialize(int i, long l) {
         decideMove = new AlphaBetaDecider();
