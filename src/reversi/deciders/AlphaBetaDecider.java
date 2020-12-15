@@ -24,11 +24,14 @@ public class AlphaBetaDecider implements IDecideMove {
     private int player;
     private int otherPlayer;
     private IRateBoard rater;
+    private IRateBoard secondaryRater;
 
     int depth;
 
     @Override
     public Coordinates nextMove(GameBoard board) {
+        if (secondaryRater == null)
+            secondaryRater = rater;
         // -10 for safety margin
         deadline = timeout + System.currentTimeMillis() - 10;
         Coordinates ret = null;
@@ -111,7 +114,7 @@ public class AlphaBetaDecider implements IDecideMove {
                 GameBoard gb2 = board.clone();
                 gb2.makeMove(this.player, b);
                 // inverse because we have a MinHeap
-                return rater.rateBoard(gb2) - rater.rateBoard(gb1);
+                return secondaryRater.rateBoard(gb2) - secondaryRater.rateBoard(gb1);
             });
             moves.addAll(Utils.getPossibleMoves(board, this.player));
 
@@ -161,7 +164,7 @@ public class AlphaBetaDecider implements IDecideMove {
                 GameBoard gb2 = board.clone();
                 gb2.makeMove(this.otherPlayer, b);
                 // normal because we want small on top
-                return rater.rateBoard(gb1) - rater.rateBoard(gb2);
+                return secondaryRater.rateBoard(gb1) - secondaryRater.rateBoard(gb2);
             });
             moves.addAll(Utils.getPossibleMoves(board, this.otherPlayer));
 
@@ -198,4 +201,10 @@ public class AlphaBetaDecider implements IDecideMove {
     public void setRater(IRateBoard rater) {
         this.rater = rater;
     }
+
+    @Override
+    public void setSecondaryRater(IRateBoard secondaryRater) {
+        this.secondaryRater = secondaryRater;
+    }
+
 }

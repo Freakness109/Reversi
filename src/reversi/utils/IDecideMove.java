@@ -30,4 +30,14 @@ public interface IDecideMove {
      * @param rater function to use
      */
     void setRater(IRateBoard rater);
+
+    /**
+     * Set secondary rating function to use in optimisation
+     * This is supposed to be a cheaper function than the
+     * main rating function
+     * @param secondaryRater a cheaper rating function than
+     *                       the main rating function. May
+     *                       be ignored by the implementation
+     */
+    default void setSecondaryRater(IRateBoard secondaryRater) {}
 }
