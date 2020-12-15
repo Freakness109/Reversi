@@ -34,8 +34,9 @@ public class PositionalRater implements IRateBoard {
                 int occupant = 0;
                 try {
                     occupant = board.getOccupation(new Coordinates(i, j));
-                } catch (OutOfBoundsException ignored) {
+                } catch (OutOfBoundsException e) {
                     // should never happen
+                    e.printStackTrace();
                 }
                 if (occupant != 0) {
                     sum += valueLut.get(indexFrom(i, j)) * occupant == player ? 1 : -1;
