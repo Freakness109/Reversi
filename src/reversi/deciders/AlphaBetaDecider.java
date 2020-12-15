@@ -46,7 +46,7 @@ public class AlphaBetaDecider implements IDecideMove {
                     Coordinates move = moves.get(i);
                     GameBoard candidate = board.clone();
                     candidate.makeMove(player, move);
-                    int searchResult = max(candidate, this.otherPlayer, depth - 1, max, Integer.MAX_VALUE);
+                    int searchResult = min(candidate, depth - 1, max, Integer.MAX_VALUE);
                     if (searchResult > max) {
                         max = searchResult;
                         bestMove = move;
@@ -56,7 +56,7 @@ public class AlphaBetaDecider implements IDecideMove {
                 Coordinates move = moves.get(moves.size() - 1);
                 GameBoard candidate = board.clone();
                 candidate.makeMove(player, move);
-                int searchResult = max(candidate, this.otherPlayer, depth - 1, max, max + 3);
+                int searchResult = min(candidate, depth - 1, max, max + 3);
                 if (searchResult > max) {
                     max = searchResult;
                     bestMove = move;
@@ -84,31 +84,47 @@ public class AlphaBetaDecider implements IDecideMove {
         return ret;
     }
 
-    private int max(GameBoard board, int player, int depth, int lowerBound, int upperBound) throws TimeOutException {
+    /**
+     * We are making a move and trying to maximize the current board
+     *
+     * @param board      board to maximize
+     * @param depth      depth to search
+     * @param lowerBound worst value we can expect
+     * @param upperBound best value we can expect
+     * @return a new worst-case lower bound
+     * @throws TimeOutException if we hit the deadline
+     */
+    private int max(GameBoard board, int depth, int lowerBound, int upperBound) throws TimeOutException {
         if (System.currentTimeMillis() >= deadline) {
             throw new TimeOutException();
         }
-
         if (depth == 0) {
             return rater.rateBoard(board);
         } else {
-            // maximize --> move lower bound up (if possible)
 
-            // optimisation: search first promising moves
+            // PriorityQueue is a MinHeap --> promising moves first
+            // --> must return the opposite of what is the actual
+            // comparison for better moves to be on top
             PriorityQueue<Coordinates> moves = new PriorityQueue<>((a, b) -> {
                 GameBoard gb1 = board.clone();
-                gb1.makeMove(player, a);
+                gb1.makeMove(this.player, a);
                 GameBoard gb2 = board.clone();
-                gb2.makeMove(player, b);
-                return rater.rateBoard(gb1) - rater.rateBoard(gb2);
+                gb2.makeMove(this.player, b);
+                // inverse because we have a MinHeap
+                return rater.rateBoard(gb2) - rater.rateBoard(gb1);
             });
-            moves.addAll(Utils.getPossibleMoves(board, player));
+            moves.addAll(Utils.getPossibleMoves(board, this.player));
+
             int newLower = lowerBound;
             for (Coordinates move : moves) {
                 GameBoard gb = board.clone();
-                gb.makeMove(player, move);
+                gb.makeMove(this.player, move);
+                // see if we can move the lower bound up
                 newLower = Integer.max(newLower,
-                        min(gb, this.otherPlayer, depth - 1, newLower, upperBound));
+                        min(gb, depth - 1, newLower, upperBound));
+
+                // if we have a better lower bound than the upper bound, the above min
+                // step will not take what we can provide --> cut branch here
                 if (newLower >= upperBound)
                     // cut
                     return newLower;
@@ -118,7 +134,17 @@ public class AlphaBetaDecider implements IDecideMove {
     }
 
 
-    private int min(GameBoard board, int player, int depth, int lowerBound, int upperBound) throws TimeOutException {
+    /**
+     * The other player is making a move and trying to minimize the current board
+     *
+     * @param board      board to minimize
+     * @param depth      depth to search
+     * @param lowerBound worst value we can expect
+     * @param upperBound best value we can expect
+     * @return a new worst-case upper bound
+     * @throws TimeOutException if we hit the deadline
+     */
+    private int min(GameBoard board, int depth, int lowerBound, int upperBound) throws TimeOutException {
         if (System.currentTimeMillis() >= deadline) {
             throw new TimeOutException();
         }
@@ -126,22 +152,30 @@ public class AlphaBetaDecider implements IDecideMove {
         if (depth == 0) {
             return rater.rateBoard(board);
         } else {
-            // optimisation: search first promising moves
+            // PriorityQueue is a MinHeap --> promising moves first
+            // promising moves for other player are actually moves
+            // with a lower value --> normal comparison
             PriorityQueue<Coordinates> moves = new PriorityQueue<>((a, b) -> {
                 GameBoard gb1 = board.clone();
-                gb1.makeMove(player, a);
+                gb1.makeMove(this.otherPlayer, a);
                 GameBoard gb2 = board.clone();
-                gb2.makeMove(player, b);
+                gb2.makeMove(this.otherPlayer, b);
+                // normal because we want small on top
                 return rater.rateBoard(gb1) - rater.rateBoard(gb2);
             });
-            moves.addAll(Utils.getPossibleMoves(board, player));
+            moves.addAll(Utils.getPossibleMoves(board, this.otherPlayer));
+
             int newUpper = upperBound;
             for (Coordinates move : moves) {
                 GameBoard gb = board.clone();
-                gb.makeMove(player, move);
+                gb.makeMove(this.otherPlayer, move);
+                // see if we can move the upper bound down
                 newUpper = Integer.min(newUpper,
-                        max(gb, this.player, depth - 1, lowerBound, newUpper));
-                if (lowerBound >= newUpper)
+                        max(gb, depth - 1, lowerBound, newUpper));
+
+                // if we have a better upper bound than the lower bound, the above max
+                // step will not take what we can provide --> cut branch here
+                if (newUpper < lowerBound)
                     // cut
                     return newUpper;
             }
