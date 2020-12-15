@@ -36,7 +36,7 @@ public class StableDiscRater implements IRateBoard {
                 e.printStackTrace();
             }
         }
-        return sum;
+        return 1000*sum;
     }
 
     @Override

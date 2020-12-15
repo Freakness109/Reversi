@@ -14,11 +14,11 @@ public class PositionalRater implements IRateBoard {
     static {
         // weights from samsoft.org.uk/reversi/strategy.htm
         valueLut = new ArrayList<>(10);
-        valueLut.add(99);
+        valueLut.add(1000);
         valueLut.add(-8);
         valueLut.add(8);
         valueLut.add(6);
-        valueLut.add(-24);
+        valueLut.add(-800);
         valueLut.add(-4);
         valueLut.add(-3);
         valueLut.add(7);
@@ -43,7 +43,8 @@ public class PositionalRater implements IRateBoard {
                 }
             }
         }
-        return sum;
+        // to normalize maximum to about 64'000
+        return 390*sum;
     }
 
     private int indexFrom(int i, int j) {

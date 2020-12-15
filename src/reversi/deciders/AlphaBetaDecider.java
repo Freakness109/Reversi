@@ -75,7 +75,7 @@ public class AlphaBetaDecider implements IDecideMove {
 
                 ret = bestMove;
                 int totalStones = board.countStones(1) + board.countStones(2);
-                if (totalStones + depth == 64) {
+                if (totalStones + depth == 65) {
                     break;
                 }
             }

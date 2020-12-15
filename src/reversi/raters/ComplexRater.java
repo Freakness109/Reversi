@@ -19,6 +19,10 @@ public class ComplexRater implements IRateBoard {
     private final List<Coordinates> corners;
     private final List<Coordinates> nextToCorners;
     private final IRateBoard greedy;
+    private final IRateBoard stableDiscs;
+    private final IRateBoard pieceDiff;
+    private final IRateBoard mobilityDiff;
+    private final IRateBoard staticRater;
 
     public ComplexRater() {
         this.corners = new ArrayList<>(4);
@@ -41,7 +45,14 @@ public class ComplexRater implements IRateBoard {
         nextToCorners.add(new Coordinates(7, 8));
 
         greedy = new TotalPieceRater();
-        greedy.setPlayer(player);
+
+        stableDiscs = new StableDiscRater();
+
+        pieceDiff = new PieceDifferenceRater();
+
+        mobilityDiff = new MobilityRater();
+
+        staticRater = new PositionalRater();
     }
 
     @Override
@@ -49,58 +60,35 @@ public class ComplexRater implements IRateBoard {
         int totalPieces = board.countStones(player) + board.countStones(otherPlayer);
         if (totalPieces > 55) {
             return greedy.rateBoard(board);
+        } else if (totalPieces > 40) {
+            int stableDisc = stableDiscs.rateBoard(board);
+            //int stableDisc = 0;
+            int pieceAdvantage = pieceDiff.rateBoard(board);
+            int mobilityAdvantage = mobilityDiff.rateBoard(board);
+            return (stableDisc + pieceAdvantage + 2 * mobilityAdvantage) / 3;
+        } else if (totalPieces > 20) {
+            int staticRating = staticRater.rateBoard(board);
+            int mobilityAdvantage = mobilityDiff.rateBoard(board);
+            return (staticRating + mobilityAdvantage) / 2;
+        } else if (totalPieces > 7) {
+            int mobilityAdvantage = mobilityDiff.rateBoard(board);
+            int staticRating = staticRater.rateBoard(board);
+            return (2 * mobilityAdvantage + staticRating) / 3;
         } else {
-            int pieceAdvantage = board.countStones(player) - board.countStones(otherPlayer);
-            int mobilityAdvantage = board.mobility(player) - board.mobility(otherPlayer);
-            int cornersCount = countCorners(board);
-            int nextToCornersCount = countNextToCorners(board);
-
-            return mobilityAdvantage * ((64 - totalPieces) * (64 - totalPieces) / 64 + (64 - totalPieces) / 4)
-                    + pieceAdvantage * totalPieces + 1000 * cornersCount - 800 * nextToCornersCount;
+            int mobilityAdvantage = mobilityDiff.rateBoard(board);
+            int staticRating = staticRater.rateBoard(board);
+            return (3 * mobilityAdvantage + staticRating) / 4;
         }
     }
 
     @Override
     public void setPlayer(int player) {
+        greedy.setPlayer(player);
+        stableDiscs.setPlayer(player);
+        pieceDiff.setPlayer(player);
+        mobilityDiff.setPlayer(player);
+        staticRater.setPlayer(player);
         this.player = player;
         this.otherPlayer = Utils.otherPlayer(player);
-    }
-
-    private int countNextToCorners(GameBoard board) {
-        int sum = 0;
-        try {
-            for (Coordinates nextToCorner : nextToCorners) {
-                int occ = board.getOccupation(nextToCorner);
-                if (occ == 0) {
-                    sum += 0;
-                } else if (occ == player) {
-                    sum += 1;
-                } else {
-                    sum += -1;
-                }
-            }
-        } catch (OutOfBoundsException ignored) {
-            // ignored
-        }
-        return sum;
-    }
-
-    private int countCorners(GameBoard board) {
-        int sum = 0;
-        try {
-            for (Coordinates corner : corners) {
-                int occ = board.getOccupation(corner);
-                if (occ == 0) {
-                    sum += 0;
-                } else if (occ == player) {
-                    sum += 1;
-                } else {
-                    sum += -1;
-                }
-            }
-        } catch (OutOfBoundsException ignored) {
-            // ignored
-        }
-        return sum;
     }
 }
