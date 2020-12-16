@@ -10,71 +10,82 @@ import java.util.*;
 
 public class StableDiscRater implements IRateBoard {
     private int player;
-    private static final Coordinates[] cornersAndNextTo;
 
-    static {
-        cornersAndNextTo = new Coordinates[12];
-        cornersAndNextTo[0] = new Coordinates(1, 1);
-        cornersAndNextTo[1] = new Coordinates(8, 1);
-        cornersAndNextTo[2] = new Coordinates(1, 8);
-        cornersAndNextTo[3] = new Coordinates(8, 8);
-        cornersAndNextTo[4] = new Coordinates(2, 1);
-        cornersAndNextTo[5] = new Coordinates(1, 2);
-        cornersAndNextTo[6] = new Coordinates(8, 2);
-        cornersAndNextTo[7] = new Coordinates(7, 1);
-        cornersAndNextTo[8] = new Coordinates(2, 8);
-        cornersAndNextTo[9] = new Coordinates(1, 7);
-        cornersAndNextTo[10] = new Coordinates(7, 8);
-        cornersAndNextTo[11] = new Coordinates(8, 7);
+    public StableDiscRater() {
     }
 
-    public StableDiscRater(){}
     @Override
     public int rateBoard(GameBoard board) {
-        boolean[][] stables = new boolean[8][8];
-        for (Coordinates coords : cornersAndNextTo) {
-            int occ = 0;
-            try {
-                occ = board.getOccupation(coords);
-            } catch (OutOfBoundsException e) {
-                e.printStackTrace();
-            }
-            if (occ == 0)
-                return 0;
-            else if (occ == this.player)
-                stables[coords.getRow() - 1][coords.getCol() - 1] = true;
+        try {
+            boolean[][] stables = new boolean[8][8];
+            int stableSum = 0;
+
+            // look at the corners
+            stables[0][0] = board.getOccupation(new Coordinates(1, 1)) == player;
+            if (stables[0][0])
+                stableSum++;
+            stables[7][0] = board.getOccupation(new Coordinates(8, 1)) == player;
+            if (stables[7][0])
+                stableSum++;
+            stables[0][7] = board.getOccupation(new Coordinates(1, 8)) == player;
+            if (stables[0][7])
+                stableSum++;
+            stables[7][7] = board.getOccupation(new Coordinates(1, 1)) == player;
+            if (stables[7][7])
+                stableSum++;
+
+            // look first at the edges:
+            stableSum = checkEdgeVert(board, stables, stableSum, 0);
+            stableSum = checkEdgeVert(board, stables, stableSum, 7);
+            stableSum = checkEdgeHoriz(board, stables, stableSum, 0);
+            stableSum = checkEdgeHoriz(board, stables, stableSum, 7);
+            // bail out if we have very little to do
+            if (stableSum < 12)
+                return stableSum;
+
+            // TODO:
+            return stableSum;
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+            return 0;
         }
-        return getStableDiscs(board);
     }
 
-    private int getStableDiscs(GameBoard board) {
-        ArrayList<Coordinates> seenCoords = new ArrayList<>();
-        Deque<Coordinates> toDoList = new ArrayDeque<>();
-        int sum = 0;
-        toDoList.add(new Coordinates(1, 1));
-        toDoList.add(new Coordinates(8, 1));
-        toDoList.add(new Coordinates(1, 8));
-        toDoList.add(new Coordinates(8, 8));
-        while (!toDoList.isEmpty()) {
-            Coordinates coords = toDoList.pop();
-            seenCoords.add(coords);
-            try {
-                if (board.getOccupation(coords) == player) {
-                    sum += 1;
-                    List<Coordinates> surrounding = Utils.getSurrounding(coords);
-                    for (Coordinates c : surrounding) {
-                        if (!seenCoords.contains(c)) {
-                            toDoList.add(c);
-                        }
-                    }
-                }
-            } catch (OutOfBoundsException e) {
-                e.printStackTrace();
-            }
+    private int checkEdgeVert(GameBoard board, boolean[][] stables, int stableSum, int col) throws OutOfBoundsException {
+        int idown;
+        for (idown = 1; idown < 7 && stables[idown - 1][col]; ++idown) {
+            stables[idown][col] = board.getOccupation(new Coordinates(idown + 1, col + 1)) == player;
+            if (!stables[idown][col])
+                break;
+            stableSum++;
         }
-        return 1000 * sum;
+        int iup;
+        for (iup = 6; idown < iup && stables[iup + 1][col]; --iup) {
+            stables[iup][col] = board.getOccupation(new Coordinates(iup + 1, col + 1)) == player;
+            if (!stables[iup][col])
+                break;
+            stableSum++;
+        }
+        return stableSum;
     }
 
+    private int checkEdgeHoriz(GameBoard board, boolean[][] stables, int stableSum, int row) throws OutOfBoundsException {
+        int idown;
+        for (idown = 1; idown < 7 && stables[row][idown - 1]; ++idown) {
+            stables[row][idown] = board.getOccupation(new Coordinates(row + 1, idown + 1)) == player;
+            if (!stables[row][idown])
+                break;
+            stableSum++;
+        }
+        int iup;
+        for (iup = 6; idown < iup && stables[row][iup + 1]; --iup) {
+            stables[row][iup] = board.getOccupation(new Coordinates(row + 1, iup + 1)) == player;
+            if (!stables[row][iup])
+                break;
+            stableSum++;
+        }
+        return stableSum;
+    }
     @Override
     public void setPlayer(int player) {
         this.player = player;
