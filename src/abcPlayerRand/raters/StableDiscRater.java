@@ -41,7 +41,7 @@ public class StableDiscRater implements IRateBoard {
             stableSum = checkEdgeHoriz(board, stables, stableSum, 7);
             // bail out if we have very little to do
             if (stableSum < 12)
-                return stableSum;
+                return 1000*stableSum;
 
             // TODO:
 
@@ -68,7 +68,7 @@ public class StableDiscRater implements IRateBoard {
                 }
             }
 
-            return stableSum;
+            return 1000*stableSum;
         } catch (OutOfBoundsException e) {
             e.printStackTrace();
             return 0;
