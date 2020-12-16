@@ -22,6 +22,7 @@ public class ComplexRater implements IRateBoard {
     private final IRateBoard pieceDiff;
     private final IRateBoard mobilityDiff;
     private final IRateBoard staticRater;
+    private final IRateBoard stableDiscsOther;
 
     public ComplexRater() {
         this.corners = new ArrayList<>(4);
@@ -52,6 +53,8 @@ public class ComplexRater implements IRateBoard {
         mobilityDiff = new MobilityRater();
 
         staticRater = new PositionalRater();
+
+        stableDiscsOther = new StableDiscRater();
     }
 
     @Override
@@ -60,8 +63,8 @@ public class ComplexRater implements IRateBoard {
         if (totalPieces > 55) {
             return greedy.rateBoard(board);
         } else if (totalPieces > 40) {
-            int stableDisc = stableDiscs.rateBoard(board);
-            //int stableDisc = 0;
+            //int stableDisc = stableDiscs.rateBoard(board) - stableDiscsOther.rateBoard(board);
+            int stableDisc = 0;
             int pieceAdvantage = pieceDiff.rateBoard(board);
             int mobilityAdvantage = mobilityDiff.rateBoard(board);
             return (stableDisc + pieceAdvantage + 2 * mobilityAdvantage) / 3;
@@ -89,5 +92,6 @@ public class ComplexRater implements IRateBoard {
         staticRater.setPlayer(player);
         this.player = player;
         this.otherPlayer = Utils.otherPlayer(player);
+        stableDiscsOther.setPlayer(otherPlayer);
     }
 }

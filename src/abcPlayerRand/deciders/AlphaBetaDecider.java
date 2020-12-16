@@ -67,7 +67,7 @@ public class AlphaBetaDecider implements IDecideMove {
 
                 if (bestMove == null) {
                     // try again with more pessimistic assumption
-                    max -= 50;
+                    max = Integer.MIN_VALUE;
                     depth--;
                     continue;
                 }

@@ -5,6 +5,7 @@ import reversi.GameBoard;
 
 public class PieceDifferenceRater implements IRateBoard {
     private int player;
+    public PieceDifferenceRater() {}
     @Override
     public int rateBoard(GameBoard board) {
         int greenPieces = board.countStones(GameBoard.GREEN);

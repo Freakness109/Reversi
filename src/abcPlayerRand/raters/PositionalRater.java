@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class PositionalRater implements IRateBoard {
     private int player;
-    private static ArrayList<Integer> valueLut;
+    private static final ArrayList<Integer> valueLut;
 
     static {
         // weights from samsoft.org.uk/reversi/strategy.htm
@@ -26,6 +26,7 @@ public class PositionalRater implements IRateBoard {
         valueLut.add(0);
     }
 
+    public PositionalRater() {}
     @Override
     public int rateBoard(GameBoard board) {
         int sum = 0;

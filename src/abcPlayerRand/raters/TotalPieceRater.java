@@ -6,6 +6,7 @@ import reversi.GameBoard;
 public class TotalPieceRater implements IRateBoard {
     private int player;
 
+    public TotalPieceRater(){}
     @Override
     public int rateBoard(GameBoard board) {
         return board.countStones(player) * 1000;
