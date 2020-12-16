@@ -63,8 +63,8 @@ public class ComplexRater implements IRateBoard {
         if (totalPieces > 55) {
             return greedy.rateBoard(board);
         } else if (totalPieces > 40) {
-            //int stableDisc = stableDiscs.rateBoard(board) - stableDiscsOther.rateBoard(board);
-            int stableDisc = 0;
+            int stableDisc = stableDiscs.rateBoard(board) - stableDiscsOther.rateBoard(board);
+            //int stableDisc = 0;
             int pieceAdvantage = pieceDiff.rateBoard(board);
             int mobilityAdvantage = mobilityDiff.rateBoard(board);
             return (stableDisc + pieceAdvantage + 2 * mobilityAdvantage) / 3;
