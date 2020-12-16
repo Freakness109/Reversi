@@ -4,7 +4,6 @@ import reversi.utils.IRateBoard;
 import reversi.utils.Utils;
 import reversi.Coordinates;
 import reversi.GameBoard;
-import reversi.OutOfBoundsException;
 
 import java.util.ArrayList;
 import java.util.List;
