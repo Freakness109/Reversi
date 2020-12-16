@@ -1,14 +1,14 @@
-package reversi.player;
+package abcPlayerRand;
 
+import abcPlayerRand.deciders.AlphaBetaDecider;
+import abcPlayerRand.raters.ComplexRater;
+import abcPlayerRand.raters.PositionalRater;
+import abcPlayerRand.utils.IDecideMove;
 import reversi.BitBoard;
-import reversi.deciders.AlphaBetaDecider;
-import reversi.raters.ComplexRater;
-import reversi.raters.PositionalRater;
-import reversi.utils.IDecideMove;
-import reversi.utils.IRateBoard;
 import reversi.Coordinates;
 import reversi.GameBoard;
 import reversi.ReversiPlayer;
+import abcPlayerRand.utils.IRateBoard;
 
 /**
  * Player skeleton for various combinations of rating schemes

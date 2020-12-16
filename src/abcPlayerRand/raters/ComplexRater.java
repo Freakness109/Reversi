@@ -1,7 +1,7 @@
-package reversi.raters;
+package abcPlayerRand.raters;
 
-import reversi.utils.IRateBoard;
-import reversi.utils.Utils;
+import abcPlayerRand.utils.IRateBoard;
+import abcPlayerRand.utils.Utils;
 import reversi.Coordinates;
 import reversi.GameBoard;
 

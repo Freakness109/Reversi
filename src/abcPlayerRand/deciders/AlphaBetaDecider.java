@@ -1,9 +1,9 @@
-package reversi.deciders;
+package abcPlayerRand.deciders;
 
-import reversi.utils.IDecideMove;
-import reversi.utils.IRateBoard;
-import reversi.utils.TimeOutException;
-import reversi.utils.Utils;
+import abcPlayerRand.utils.IDecideMove;
+import abcPlayerRand.utils.TimeOutException;
+import abcPlayerRand.utils.IRateBoard;
+import abcPlayerRand.utils.Utils;
 import reversi.Coordinates;
 import reversi.GameBoard;
 

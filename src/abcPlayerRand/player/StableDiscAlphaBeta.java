@@ -1,12 +1,12 @@
-package reversi.player;
+package abcPlayerRand.player;
 
+import abcPlayerRand.deciders.AlphaBetaDecider;
+import abcPlayerRand.raters.StableDiscRater;
+import abcPlayerRand.utils.IDecideMove;
 import reversi.Coordinates;
 import reversi.GameBoard;
 import reversi.ReversiPlayer;
-import reversi.deciders.AlphaBetaDecider;
-import reversi.raters.StableDiscRater;
-import reversi.utils.IDecideMove;
-import reversi.utils.IRateBoard;
+import abcPlayerRand.utils.IRateBoard;
 
 public class StableDiscAlphaBeta implements ReversiPlayer {
     private IDecideMove decideMove;

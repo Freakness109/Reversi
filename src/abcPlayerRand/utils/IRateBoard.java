@@ -1,4 +1,4 @@
-package reversi.utils;
+package abcPlayerRand.utils;
 
 import reversi.GameBoard;
 

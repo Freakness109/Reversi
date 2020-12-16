@@ -1,8 +1,8 @@
-package reversi.raters;
+package abcPlayerRand.raters;
 
 import reversi.GameBoard;
-import reversi.utils.IRateBoard;
-import reversi.utils.Utils;
+import abcPlayerRand.utils.IRateBoard;
+import abcPlayerRand.utils.Utils;
 
 public class MobilityRater implements IRateBoard {
     private int player;

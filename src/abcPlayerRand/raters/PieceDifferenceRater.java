@@ -1,6 +1,6 @@
-package reversi.raters;
+package abcPlayerRand.raters;
 
-import reversi.utils.IRateBoard;
+import abcPlayerRand.utils.IRateBoard;
 import reversi.GameBoard;
 
 public class PieceDifferenceRater implements IRateBoard {

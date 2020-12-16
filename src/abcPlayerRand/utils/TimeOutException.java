@@ -1,4 +1,4 @@
-package reversi.utils;
+package abcPlayerRand.utils;
 
 public class TimeOutException extends Exception {
     public TimeOutException() {

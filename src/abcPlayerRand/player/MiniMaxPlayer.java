@@ -1,12 +1,12 @@
-package reversi.player;
+package abcPlayerRand.player;
 
+import abcPlayerRand.utils.IDecideMove;
 import reversi.Coordinates;
 import reversi.GameBoard;
 import reversi.ReversiPlayer;
-import reversi.deciders.MiniMaxDecider;
-import reversi.raters.ComplexRater;
-import reversi.utils.IDecideMove;
-import reversi.utils.IRateBoard;
+import abcPlayerRand.deciders.MiniMaxDecider;
+import abcPlayerRand.raters.PieceDifferenceRater;
+import abcPlayerRand.utils.IRateBoard;
 
 public class MiniMaxPlayer implements ReversiPlayer {
     IDecideMove decider;
@@ -17,7 +17,7 @@ public class MiniMaxPlayer implements ReversiPlayer {
         decider = new MiniMaxDecider();
         decider.setPlayer(i);
         decider.setTimeout(l);
-        IRateBoard rater = new ComplexRater();
+        IRateBoard rater = new PieceDifferenceRater();
         rater.setPlayer(i);
         decider.setRater(rater);
     }

@@ -1,9 +1,9 @@
-package reversi.raters;
+package abcPlayerRand.raters;
 
 import reversi.Coordinates;
 import reversi.GameBoard;
 import reversi.OutOfBoundsException;
-import reversi.utils.IRateBoard;
+import abcPlayerRand.utils.IRateBoard;
 
 import java.util.ArrayList;
 
