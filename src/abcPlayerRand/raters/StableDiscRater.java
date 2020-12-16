@@ -30,7 +30,7 @@ public class StableDiscRater implements IRateBoard {
             stables[0][7] = board.getOccupation(new Coordinates(1, 8)) == player;
             if (stables[0][7])
                 stableSum++;
-            stables[7][7] = board.getOccupation(new Coordinates(1, 1)) == player;
+            stables[7][7] = board.getOccupation(new Coordinates(8, 8)) == player;
             if (stables[7][7])
                 stableSum++;
 
@@ -44,12 +44,261 @@ public class StableDiscRater implements IRateBoard {
                 return stableSum;
 
             // TODO:
+
+            //fill stables
+            if (stables[0][0]) {
+                checkDiagonalUpperLeft(stables, board);
+            }
+            if (stables[7][7]) {
+                checkDiagonalLowerRight(stables, board);
+            }
+            if (stables[1][7]) {
+                checkDiagonalUpperRight(stables, board);
+            }
+            if (stables[7][1]) {
+                checkDiagonalLowerLeft(stables, board);
+            }
+
+            //count true in stables
+            for (int x = 0; x < 8; x++) {
+                for (int y = 0; y < 8; y++) {
+                    if (stables[x][y]) {
+                        stableSum++;
+                    }
+                }
+            }
+
             return stableSum;
         } catch (OutOfBoundsException e) {
             e.printStackTrace();
             return 0;
         }
     }
+
+    /*
+     * 
+     * @param row     >= 1
+     * @param col     >= 1
+     *
+     */
+    private boolean checkUpperLeft(boolean[][] stables, int row, int col, GameBoard board) {
+        try {
+            return stables[row - 1][col] && stables[row][col - 1] //direct neighbours
+                    && (stables[row + 1][col - 1] || stables[row - 1][col + 1]) //diagonal neighbours
+                    && board.getOccupation(new Coordinates(row + 1, col + 1)) == player;
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void checkDiagonalUpperLeft(boolean[][] stables, GameBoard board) {
+        for (int n = 2; n < 7; n++) { //diagonale
+            int i = n - 1;
+            int j = 1;
+            int numberOfDiagonals = i - j + 1;
+            int noFundamentalStableDisc = 0;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von unten links nach oben rechts
+                if (checkUpperLeft(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i--;
+                j++;
+            }
+
+            i = 1;
+            j = n - 1;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben rechts nach unten links
+                if (checkUpperLeft(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i++;
+                j--;
+
+            }
+
+            if (noFundamentalStableDisc == 2) {
+                break;
+            }
+        }
+    }
+
+    private boolean checkLowerRight(boolean[][] stables, int row, int col, GameBoard board) {
+        try {
+            return stables[row + 1][col] && stables[row][col + 1] //direct neighbours
+                    && (stables[row + 1][col - 1] || stables[row - 1][col + 1]) //diagonal neighbours
+                    && board.getOccupation(new Coordinates(row + 1, col + 1)) == player;
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void checkDiagonalLowerRight(boolean[][] stables, GameBoard board) {
+        for (int n = 12; n > 7; n--) { //diagonale
+            int i = 6;
+            int j = n - 6;
+            int numberOfDiagonals = j - i + 1;
+            int noFundamentalStableDisc = 0;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von unten links nach oben rechts
+                if (checkLowerRight(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i--;
+                j++;
+            }
+
+            i = n - 6;
+            j = 6;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben rechts nach unten links
+                if (checkLowerRight(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i++;
+                j--;
+
+            }
+
+            if (noFundamentalStableDisc == 2) {
+                break;
+            }
+        }
+    }
+
+    private boolean checkUpperRight(boolean[][] stables, int row, int col, GameBoard board) {
+        try {
+            return stables[row - 1][col] && stables[row][col + 1] //direct neighbours
+                    && (stables[row - 1][col - 1] || stables[row + 1][col + 1]) //diagonal neighbours
+                    && board.getOccupation(new Coordinates(row + 1, col + 1)) == player;
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void checkDiagonalUpperRight(boolean[][] stables, GameBoard board) {
+        int numberOfDiagonals = 0;
+        for (int n = 6; n > 1; n--) { //diagonale
+            int i = 1;
+            int j = n;
+            numberOfDiagonals++;
+            int noFundamentalStableDisc = 0;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben links nach unten rechts
+                if (checkUpperRight(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i++;
+                j++;
+            }
+
+            i = numberOfDiagonals;
+            j = 6;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben rechts nach unten links
+                if (checkUpperRight(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i--;
+                j--;
+
+            }
+            if (noFundamentalStableDisc == 2) {
+                break;
+            }
+        }
+
+    }
+
+    private boolean checkLowerLeft(boolean[][] stables, int row, int col, GameBoard board) {
+        try {
+            return stables[row + 1][col] && stables[row][col - 1] //direct neighbours
+                    && (stables[row + 1][col + 1] || stables[row - 1][col - 1]) //diagonal neighbours
+                    && board.getOccupation(new Coordinates(row + 1, col + 1)) == player;
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void checkDiagonalLowerLeft(boolean[][] stables, GameBoard board) {
+        int numberOfDiagonals = 0;
+        for (int n = 6; n > 1; n--) { //diagonale
+            int i = n;
+            int j = 1;
+            numberOfDiagonals++;
+            int noFundamentalStableDisc = 0;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben links nach unten rechts
+                if (checkLowerLeft(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i++;
+                j++;
+            }
+
+            i = 6;
+            j = numberOfDiagonals;
+
+            for (int a = 0; a < numberOfDiagonals; a++) { //von oben rechts nach unten links
+                if (checkLowerLeft(stables, i, j, board)) {
+                    stables[i][j] = true;
+                } else {
+                    if (a == 0) {
+                        noFundamentalStableDisc++;
+                    }
+                    break;
+                }
+                i--;
+                j--;
+
+            }
+            if (noFundamentalStableDisc == 2) {
+                break;
+            }
+        }
+
+    }
+
 
     private int checkEdgeVert(GameBoard board, boolean[][] stables, int stableSum, int col) throws OutOfBoundsException {
         int idown;
@@ -86,6 +335,7 @@ public class StableDiscRater implements IRateBoard {
         }
         return stableSum;
     }
+
     @Override
     public void setPlayer(int player) {
         this.player = player;
